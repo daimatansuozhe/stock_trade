@@ -33,6 +33,8 @@ def classify(texts):
             "Confidence": round(confidence, 4)
         })
         df=pd.DataFrame(result)
+
+
     return df
 
 
@@ -51,33 +53,34 @@ if __name__=="__main__":
     tokenizer = BertTokenizerFast.from_pretrained(local_path)
     model = AutoModelForSequenceClassification.from_pretrained(local_path, config=config, trust_remote_code=True)
 
-    # input_file = "input_sentences.csv"  # 假设CSV中有列名 sentence
-    # df_input = pd.read_csv(input_file)
-    # texts = df_input["sentence"].tolist()  #['此外宁德时代上半年实现出口约2GWh，同比增加200%+。', '今日股市波动剧烈，投资者信心不足。']
+    input_file = "input_sentences.csv"  # CSV中仅有列名 sentence，预测label
+    df_input = pd.read_csv(input_file)
+    texts = df_input["sentence"].tolist()  #['此外宁德时代上半年实现出口约2GWh，同比增加200%+。', '今日股市波动剧烈，投资者信心不足。']
+    model.eval()
+    # 情感分析判断
+    df_pre = classify(texts)
+    write_to_csv(df_pre)
 
-    # input_file=['FinancialPhraseBank-v1.0/Sentences_50Agree.txt',
-    #             'FinancialPhraseBank-v1.0/Sentences_66Agree.txt',
-    #             'FinancialPhraseBank-v1.0/Sentences_75Agree.txt',
-    #             'FinancialPhraseBank-v1.0/Sentences_AllAgree.txt']
-    input_file=[
-                'Dataset_finance_chinese/test_data.csv']
-    for i in range(0,input_file.__len__()):
-        texts,df_label=dfc_load(input_file[i])
-        model.eval()
-        #情感分析判断
-        df_pre=classify(texts)
-        write_to_csv(df_pre)
+    #想要对多个csv进行预测⬇️
+    # input_file=['input_sentences.csv']
+    # for i in range(0,input_file.__len__()):
+        #对。txt进行格式转换： sentence@positive
+        # texts,df_label=load_sentences(input_file[i])
+        # model.eval()
+        # #情感分析判断
+        # df_pre=classify(texts)
+        # write_to_csv(df_pre)
 
-        #准确率
-        correct=0
-        acc=0
-        for pre,label in zip(df_pre["Predicted Label"],df_label):
-            #转换为仅首字母大写
-            pre=pre.capitalize()
-            label=label.capitalize()
-            correct+=1 if pre==label else 0
-        acc=correct/df_label.size
-        print(f"预测准确率为：{acc:.4f}")
+        # #准确率
+        # correct=0
+        # acc=0
+        # for pre,label in zip(df_pre["Predicted Label"],df_label):
+        #     #转换为仅首字母大写
+        #     pre=pre.capitalize()
+        #     label=label.capitalize()
+        #     correct+=1 if pre==label else 0
+        # acc=correct/df_label.size
+        # print(f"预测准确率为：{acc:.4f}")
 
 
 
