@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from data_preparation import load_sentences
 from tqdm import tqdm
-from dp_dfc import dfc_load
+from dp_for_Dataset_finance_chinese import dfc_load
 # ========== 1. 模型与Tokenizer加载 ==========
 #联网调用yiyanghkust/finbert-tone-chinese，github中未上传local_model，选这个
 # model_path = "yiyanghkust/finbert-tone-chinese"
@@ -38,7 +38,7 @@ def classify(texts):
     return df
 
 
-def write_to_csv(df, path="./output",file="finbert_ch_pre1.csv"):
+def write_to_csv(df, path="./output",file="finbert_ch_pre.csv"):
     df.to_csv(os.path.join(path,file), index=False)
     print(f"✅ 分类结果已保存至 {os.path.join(path,file)}")
 
@@ -47,7 +47,7 @@ def write_to_csv(df, path="./output",file="finbert_ch_pre1.csv"):
 
 if __name__=="__main__":
     #本地配置储存path
-    local_path = './local_model/finbert_chinese'
+    local_path = 'local_model/finbert_chinese'
     config = AutoConfig.from_pretrained(local_path)
     #加载预训练的tokenizer，model，“trust_remote_code=True”：model采用modeling_finbert.py
     tokenizer = BertTokenizerFast.from_pretrained(local_path)

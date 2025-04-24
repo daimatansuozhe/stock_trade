@@ -9,6 +9,7 @@ def dfc_load(file_path):
     #sentence仅为标题⬇️
     df1['sentence'] = df['标题']
     df1['label_num'] = df['正负面']
+
     # header=None：表示原始文件没有表头行（第一行就是数据，不是列名）
     # df = pd.read_csv(file_path, sep='@', names=["sentence", "label"],encoding='ISO-8859-1')
     # df["sentence"] = df["sentence"].str.strip()  # 去除前后空格

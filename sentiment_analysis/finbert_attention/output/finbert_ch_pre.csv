@@ -1,3 +1,7 @@
 Text,Predicted Label,Confidence
 此外宁德时代上半年实现出口约2GWh，同比增加200%+。,Positive,0.9989
 今日股市波动剧烈，投资者信心不足。,Negative,0.9988
+明天股市割韭菜,Neutral,0.9946
+明天包买的,Neutral,0.9882
+上车准备起飞,Neutral,0.9938
+明天包涨,Neutral,0.9804

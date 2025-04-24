@@ -28,7 +28,7 @@ def sentiment_analysis(text, sys_prompt="You are a helpful assistant",custom_pro
 
 # 设置 client:调用的api_key和api——url,custom:用户提示词,sys:系统提示词
 client = openai.OpenAI(api_key="sk-11da4c508da341088bbf4ec4afc66bf8",base_url='https://api.deepseek.com')
-input_path='test.csv'
+input_path='example_input.csv'
 df=pd.read_csv(input_path)
 custom = (
     "请以简洁的方式分析这段话的情绪倾向（positive、negative）以及情感得分（置信度）保留三位小数：\n{text}\n"

@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('../Dataset_finance_chinese/test_data.csv')
+df = pd.read_csv('../dataset/Dataset_finance_chinese/test_data.csv')
 df1 = pd.DataFrame()
 
 #sentence为标题➕正文⬇️
