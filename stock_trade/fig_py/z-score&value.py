@@ -73,8 +73,8 @@ strategy = PairTradingStrategy(
 # 这里可以修改为你想要的股票对
 # 格式：[(股票1代码, 股票2代码), (股票3代码, 股票4代码), ...]
 specified_pairs = [
-    # ('603596.SH', '603129.SH'),  # 示例股票对1
-    ('600295.SH', '000825.SZ')  # 示例股票对2
+    ('603596.SH', '603129.SH'),  # 示例股票对1
+    # ('600295.SH', '000825.SZ')  # 示例股票对2
 ]
 
 # 5. 处理指定的股票对（取消协整检验）
@@ -232,12 +232,35 @@ for i, pair_info in enumerate(strategy.selected_pairs):
     # ax2.axhline(y=-strategy.stop_loss, color='purple', linestyle='-.')
 
     # 添加图例
-    lines = line1 + line2
-    labels = ['组合价值', f'Z得分']
-    ax1.legend(lines, labels, loc='upper left')
+    threshold_up = ax2.axhline(
+        y=strategy.z_threshold,
+        color='red',
+        linestyle='--',
+        label='上阈值'  # 明确设置label
+    )
+    threshold_down = ax2.axhline(
+        y=-strategy.z_threshold,
+        color='green',
+        linestyle='--',
+        label='下阈值'  # 明确设置label
+    )
+
+    # **手动组合所有线条和标签**
+    all_lines = line1 + line2 + [threshold_up, threshold_down]
+    all_labels = ['组合价值', f'Z得分', '上阈值', '下阈值']
+
+    # **添加图例（支持多列布局，避免遮挡图表）**
+    ax1.legend(
+        all_lines,
+        all_labels,
+        loc='upper left',
+        # bbox_to_anchor=(0, 1.1),  # 图例位置在图表外上方
+        ncol=1,  # 两行显示
+        frameon=True  # 显示图例边框
+    )
 
     # 添加标题
-    plt.title(f'汽车行业配对交易策略资产组合价值与 {pair} Z得分曲线 ({args.start_date}至{args.end_date})')
+    plt.title(f'钢铁行业配对交易策略资产组合价值与 {pair} Z得分曲线 ({args.start_date}至{args.end_date})')
 
     # 保存组合价值与Z得分图
     pair_img_path = os.path.join(args.output_dir, f'portfolio_{s1}_{s2}_zscore_{args.start_date}_{args.end_date}.png')

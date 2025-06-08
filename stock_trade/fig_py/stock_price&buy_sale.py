@@ -273,8 +273,8 @@ def main():
     # 这里可以修改为你想要的股票对
     # 格式：[(股票1代码, 股票2代码), (股票3代码, 股票4代码), ...]
     specified_pairs = [
-        ('603596.SH', '603129.SH'),  # 示例股票对1
-        # ('600295.SH', '000825.SZ')  # 示例股票对2
+        # ('603596.SH', '603129.SH'),  # 示例股票对1
+        ('600295.SH', '000825.SZ')  # 示例股票对2
 
 
     ]
@@ -444,57 +444,74 @@ def main():
                     buy_dates_s2.append(signal_date)
                     buy_prices_s2.append(s2_price)
 
-        # 创建图表
-        fig, ax1 = plt.subplots(figsize=(16, 8))
-        # 绘制股票1价格（左侧Y轴）
-        color = 'black'
-        ax1.set_xlabel('日期')
-        ax1.set_ylabel(f'{s1} 价格 (元)', color=color)
-        ax1.plot(dates, s1_prices, color=color, linewidth=1.5, label=f'{s1}')
-        ax1.tick_params(axis='y', labelcolor=color)
+                # 创建图表
+            fig, ax1 = plt.subplots(figsize=(16, 8))
 
-        # 绘制股票2价格（右侧Y轴）
+            # 绘制股票1（s1）价格（左侧Y轴）
+            ax1.set_xlabel('日期')
+            ax1.set_ylabel(f'{s1} 价格 (元)', color='black')
+            line_s1 = ax1.plot(dates, s1_prices, color='blue', linewidth=1.5, label=s1)
+            ax1.tick_params(axis='y', labelcolor='black')
 
-        ax2 = ax1.twinx()
-        ax2.set_ylabel(f'{s2} 价格 (元)', color=color)
-        ax2.plot(dates, s2_prices, color=color, linewidth=1.5, label=f'{s2}')
-        ax2.tick_params(axis='y', labelcolor=color)
-        # 绘制股票价格
-        line1 = ax1.plot(dates, s1_prices, label=f'{s1} 价格', color='blue', linewidth=1.5)
-        line2 = ax2.plot(dates, s2_prices, label=f'{s2} 价格', color='orange', linewidth=1.5)
+            # 绘制股票2（s2）价格（右侧Y轴）
+            ax2 = ax1.twinx()
+            ax2.set_ylabel(f'{s2} 价格 (元)', color='black')
+            line_s2 = ax2.plot(dates, s2_prices, color='orange', linewidth=1.5, label=s2)
+            ax2.tick_params(axis='y', labelcolor='black')
 
-        # 标记交易信号
-        if buy_dates_s1:
-            ax1.scatter(buy_dates_s1, buy_prices_s1, marker='^', color='green', s=50,
-                        edgecolors='black', linewidths=0.5, label=f'{s1} 做多信号')
-        if sell_dates_s1:
-            ax1.scatter(sell_dates_s1, sell_prices_s1, marker='v', color='red', s=50,
-                        edgecolors='black', linewidths=0.5, label=f'{s1} 做空信号')
+            # **标记交易信号并区分股票代码**
+            # 股票1（s1）的做多信号（绿色向上箭头，标签包含s1）
+            buy_s1 = ax1.scatter(
+                buy_dates_s1, buy_prices_s1,
+                marker='^', color='green', s=50,
+                edgecolors='black', linewidths=0.5,
+                label=f'{s1} 做多'
+            )
+            # 股票1（s1）的做空信号（红色向下箭头，标签包含s1）
+            sell_s1 = ax1.scatter(
+                sell_dates_s1, sell_prices_s1,
+                marker='v', color='red', s=50,
+                edgecolors='black', linewidths=0.5,
+                label=f'{s1} 做空'
+            )
+            # 股票2（s2）的做多信号（紫色向上箭头，标签包含s2）
+            buy_s2 = ax2.scatter(
+                buy_dates_s2, buy_prices_s2,
+                marker='^', color='purple', s=50,
+                edgecolors='black', linewidths=0.5,
+                label=f'{s2} 做多'
+            )
+            # 股票2（s2）的做空信号（棕色向下箭头，标签包含s2）
+            sell_s2 = ax2.scatter(
+                sell_dates_s2, sell_prices_s2,
+                marker='v', color='brown', s=50,
+                edgecolors='black', linewidths=0.5,
+                label=f'{s2} 做空'
+            )
 
-        if buy_dates_s2:
-            ax2.scatter(buy_dates_s2, buy_prices_s2, marker='^', color='purple', s=50,
-                        edgecolors='black', linewidths=0.5, label=f'{s2} 做多信号')
-        if sell_dates_s2:
-            ax2.scatter(sell_dates_s2, sell_prices_s2, marker='v', color='brown', s=50,
-                        edgecolors='black', linewidths=1, label=f'{s2} 做空信号')
+            # **手动组合图例句柄和标签（顺序与绘制顺序一致）**
+            handles = [line_s1[0], line_s2[0], buy_s1, sell_s1, buy_s2, sell_s2]
+            labels = [s1, s2, f'{s1} 做多', f'{s1} 做空', f'{s2} 做多', f'{s2} 做空']
 
-        # ax1.set_xlabel('日期')
-        # ax1.set_ylabel('价格 (元)', color='black')
-        # ax1.tick_params(axis='y', labelcolor='black')
+            # **添加图例（分两行显示，位置在图表外上方）**
+            ax1.legend(
+                handles, labels,
+                loc='upper right',  # 图例位于右下角
+                frameon=True,
+                framealpha=0.9,
+                title='图例',  # 可选：添加图例标题
+                title_fontsize=10,
+                # bbox_to_anchor=(1, 1),  # 调整锚点避免超出图表边界
+                # ncol=2  # 若条目过多，可设置列数
+            )
 
-        # 设置x轴日期格式
-        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        fig.autofmt_xdate()  # 自动旋转日期标签
+            # 设置x轴日期格式和网格线（省略重复逻辑）
+            ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+            fig.autofmt_xdate()
+            ax1.grid(True, linestyle='--', alpha=0.7)
 
-        # 添加网格线
-        ax1.grid(True, linestyle='--', alpha=0.7)
-
-        # 添加图例
-        handles, labels = ax1.get_legend_handles_labels()
-        ax1.legend(handles, labels, loc='upper left', frameon=True, framealpha=0.9)
-
-        # 添加标题
-        plt.title(f'股票对 {pair} 价格走势图及交易信号 ({args.start_date}至{args.end_date})')
+            # 添加标题（省略重复逻辑）
+            plt.title(f'股票对 {pair} 价格走势图及交易信号 ({args.start_date}至{args.end_date})')
 
         # 保存价格走势图
         pair_img_path = os.path.join(args.output_dir, f'prices_{s1}_{s2}_signals_{args.start_date}_{args.end_date}.png')
